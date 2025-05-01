@@ -1,0 +1,48 @@
+# VS Code settings
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+*.exe
+*.dll
+*.pdb
+*.app
+*.out
+
+# VS-generated files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# CMake or Make (if used)
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# Crash dumps
+*.dmp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.swp
+
+# vcpkg build artifacts (optional)
+vcpkg_installed/
+buildtrees/
+packages/
+downloads/
