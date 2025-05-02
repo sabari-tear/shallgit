@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include <iostream>  
-#include <fstream>  
+#include <iostream>
+#include <fstream>
 #if __cplusplus >= 201703L  
 #include <filesystem>  
 namespace fs = std::filesystem;
@@ -11,7 +11,9 @@ namespace fs = std::filesystem;
 using namespace std::experimental::filesystem;
 #endif  
 
+
 #include "utils.h"
+#include "commit.h"
 
 class sgit
 {

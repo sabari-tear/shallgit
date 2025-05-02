@@ -28,5 +28,4 @@ void sgit::init() {
     create_directories(staging);
     create_directories(globalLog);
 
-
 }

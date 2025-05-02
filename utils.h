@@ -1,9 +1,11 @@
 #pragma once
-#include <string> 
+
+#include <string>
 #include <fstream>
 using namespace std;
+
 namespace utils
 {
-	string readTextFromFile(const string& file);
+	string readTextFromFile(string& file);
 };
 
