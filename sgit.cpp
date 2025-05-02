@@ -22,4 +22,11 @@ void sgit::init() {
     path staging = repo / "staging";
     path globalLog = repo / "gloabal-log";
 
+    create_directories(blobs);
+    create_directories(commits);
+    create_directories(branches);
+    create_directories(staging);
+    create_directories(globalLog);
+
+
 }
