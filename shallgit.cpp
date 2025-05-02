@@ -5,6 +5,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+
     vector<string> cmd;
     for (int i = 1; i < argc; i++) {
         cmd.push_back(argv[i]);
@@ -27,6 +28,6 @@ int main(int argc, char* argv[])
         }
         else if (op == "log") {
             cout << "git log showing" << '\n';
-        }
+         }
     }
 }
