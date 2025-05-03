@@ -13,6 +13,6 @@ class commit
 	string ownHash;
 
 	commit();
-	commit(string& msg, unordered_map<string, string>& blobMap, string& parent);
+	commit(const string& msg, unordered_map<string, string>& blobMap, string& parent);
 };
 
