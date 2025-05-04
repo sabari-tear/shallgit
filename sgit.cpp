@@ -5,7 +5,7 @@ namespace fs = std::filesystem;
 using namespace std::experimental::filesystem;  
 #endif  
 using namespace utils;
-
+using namespace std;
 
 sgit::sgit() {  
     workingDir = current_path();
@@ -28,5 +28,8 @@ void sgit::init() {
     create_directories(staging);
     create_directories(globalLog);
 
-    commit initialCommit("initial commit",{}, "");
+    string s = "initial commit";
+    commit initialCommit(s , {}, string(""));
+    string commitHash = initialCommit.getOwnHash();
+
 }
