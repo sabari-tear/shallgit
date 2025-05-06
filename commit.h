@@ -3,6 +3,9 @@
 #include <unordered_map>
 #include <string>
 #include <sstream>
+#include <chrono>
+#include <iomanip>
+
 class commit
 {
 public:
@@ -22,6 +25,7 @@ public:
 	std::string getDatetime();
 	std::unordered_map<std::string, std::string> getBlobs();
 	std::string globalLog();
+	std::string currentDateTime();
 };
 
 
