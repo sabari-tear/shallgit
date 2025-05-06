@@ -6,3 +6,7 @@ string utils::readTextFromFile(string& path) {
 	ifstream file(path);
 	return {istreambuf_iterator<char>(file), istreambuf_iterator<char>()};
 }
+
+string utils::sha1(vector<char>& vals) {
+
+}
