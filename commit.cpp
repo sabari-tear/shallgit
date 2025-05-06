@@ -37,3 +37,20 @@ std::string commit::globalLog() {
 		<< message << "\n\n";
 	return log.str();
 }
+
+std::string commit::currentDateTime() {
+	auto now = std::chrono::system_clock::now();
+	auto in_time_t = std::chrono::system_clock::to_time_t(now);
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+	return ss.str();
+}
+
+std::string commit::calcHash() {
+	std::ostringstream archive_stream;
+	boost::archive::text_oarchive archive(archive_stream);
+	archive << *this;
+	std::string serializedCommit = archive_stream.str();
+	std::vector<char> commitData(serializedCommit.begin(),serializedCommit.end());
+	return "";//sha1(commitData);
+}
