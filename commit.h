@@ -5,7 +5,7 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
-
+#include <boost/archive/text_oarchive.hpp>
 class commit
 {
 public:
