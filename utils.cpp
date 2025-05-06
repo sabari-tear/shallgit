@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include <openssl/sha.h>
 using namespace std;
 
 string utils::readTextFromFile(string& path) {
@@ -8,5 +8,7 @@ string utils::readTextFromFile(string& path) {
 }
 
 string utils::sha1(vector<char>& vals) {
+	unsigned char hash[SHA_DIGEST_LENGTH];
+	SHA1(reinterpret_cast<const unsigned char*> (vals.data()), vals.size(), hash);
 
 }
