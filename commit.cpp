@@ -29,3 +29,11 @@ std::unordered_map<std::string, std::string> commit::getBlobs() {
 	return blobs;
 }
 
+std::string commit::globalLog() {
+	std::ostringstream log;
+	log << "====\n"
+		<< "Commit " << ownHash << '\n'
+		<< datetime << '\n'
+		<< message << "\n\n";
+	return log.str();
+}

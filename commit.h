@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <sstream>
 class commit
 {
 public:
@@ -20,6 +21,7 @@ public:
 	std::string getMessage();
 	std::string getDatetime();
 	std::unordered_map<std::string, std::string> getBlobs();
-	string globalLog();
+	std::string globalLog();
 };
+
 
