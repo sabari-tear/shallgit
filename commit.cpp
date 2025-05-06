@@ -8,3 +8,24 @@ commit::commit(const std::string& msg, const std::unordered_map<std::string, std
 	datetime = "";//currentDateTime();
 	ownHash = ""; //calcHash();
 }
+
+std::string commit::getOwnHash() {
+	return ownHash;
+}
+
+std::string commit::getParentHash() {
+	return parentHash;
+}
+
+std::string commit::getMessage() {
+	return message;
+}
+
+std::string commit::getDatetime() {
+	return datetime;
+}
+
+std::unordered_map<std::string, std::string> commit::getBlobs() {
+	return blobs;
+}
+
