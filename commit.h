@@ -6,6 +6,7 @@
 #include <chrono>
 #include <iomanip>
 #include <boost/archive/text_oarchive.hpp>
+#include "utils.h"
 class commit
 {
 public:

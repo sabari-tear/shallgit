@@ -52,5 +52,5 @@ std::string commit::calcHash() {
 	archive << *this;
 	std::string serializedCommit = archive_stream.str();
 	std::vector<char> commitData(serializedCommit.begin(),serializedCommit.end());
-	return "";//sha1(commitData);
+	return utils::sha1(commitData);
 }
