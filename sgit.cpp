@@ -36,7 +36,17 @@ void sgit::init() {
     path masterBranchPath = branches / "master.txt";
     ofstream masterFile(masterBranchPath.string());
     if (!masterFile) {
-        std::cerr << "Failed to create the master branch file." << endl;
+        cerr << "Failed to create the master branch file." << endl;
+        return;
+    }
+
+    masterFile << commitHash;
+    masterFile.close();
+
+    path headPath = branches / "head.txt";
+    ofstream headFile(headPath.string());
+    if (!headFile) {
+        cerr << "Falided to set the head" << endl;
         return;
     }
 
