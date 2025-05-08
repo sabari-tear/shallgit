@@ -50,4 +50,14 @@ void sgit::init() {
         return;
     }
 
+    headFile << " master";
+    headFile.close();
+
+    //stage = StagingArea();
+    //searilaizeStage();
+
+    cout << "Intialized an empty shallgit repository in " << absolute(repo) << endl;
+
+    ofstream globalLogFile(globalLog / "gl.txt");
+    globalLogFile.close();
 }
