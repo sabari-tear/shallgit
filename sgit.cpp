@@ -31,5 +31,13 @@ void sgit::init() {
     string s = "initial commit";
     commit initialCommit(s , {}, string(""));
     string commitHash = initialCommit.getOwnHash();
+    //serializeCommit();
+
+    path masterBranchPath = branches / "master.txt";
+    ofstream masterFile(masterBranchPath.string());
+    if (!masterFile) {
+        std::cerr << "Failed to create the master branch file." << endl;
+        return;
+    }
 
 }

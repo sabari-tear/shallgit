@@ -9,5 +9,6 @@ namespace utils
 {
 	string readTextFromFile(string& file);
 	string sha1(vector<char>& vals);
+	
 };
 
