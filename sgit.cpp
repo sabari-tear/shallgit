@@ -61,3 +61,7 @@ void sgit::init() {
     ofstream globalLogFile(globalLog / "gl.txt");
     globalLogFile.close();
 }
+
+void sgit::add(string& fileName) {
+
+}

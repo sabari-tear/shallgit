@@ -24,5 +24,6 @@ public:
 	sgit();
 
 	void init();
+	void add(string& fileName);
 };
 
