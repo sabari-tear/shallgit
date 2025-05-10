@@ -63,5 +63,11 @@ void sgit::init() {
 }
 
 void sgit::add(string& fileName) {
+    if (fileName == ".") {
+        for (const auto& file : directory_iterator(workingDir)) {
+            // check condition
 
+            add(file.path().filename().string());
+        }
+    }
 }
