@@ -62,7 +62,7 @@ void sgit::init() {
     globalLogFile.close();
 }
 
-void sgit::add(string& fileName) {
+void sgit::add(const string& fileName) {
     if (fileName == ".") {
         for (const auto& file : directory_iterator(workingDir)) {
             // check condition

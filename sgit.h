@@ -24,6 +24,6 @@ public:
 	sgit();
 
 	void init();
-	void add(string& fileName);
+	void add(const string& fileName);
 };
 
