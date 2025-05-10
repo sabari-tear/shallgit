@@ -70,4 +70,10 @@ void sgit::add(const string& fileName) {
             add(file.path().filename().string());
         }
     }
+
+    //else condition
+}
+
+void sgit::commitment(const std::string& msg) {
+
 }
