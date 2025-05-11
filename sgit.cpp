@@ -75,5 +75,7 @@ void sgit::add(const string& fileName) {
 }
 
 void sgit::commitment(const std::string& msg) {
+    //stage needed
 
+    Commit curr = getCurrentCommit();
 }
