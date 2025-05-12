@@ -15,3 +15,11 @@ void stagingarea::clear() {
 	addedFiles.clear();
 	removedFiles.clear();
 }
+
+std::unordered_map<std::string,std::string> stagingarea::getAddedFiles() {
+	return addedFiles;
+}
+
+std::vector<std::string> stagingarea::getRemovedFiles() {
+	return removedFiles;
+}
