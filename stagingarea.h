@@ -1,5 +1,14 @@
 #pragma once
+#include<string>
+#include <unordered_map>
 class stagingarea
 {
+public:
+	stagingarea();
+	
+	void add(const std::string& filename, const std::string& sha1);
+
+	std::unordered_map<std::string, std::string> addedFiles;
+	std::vector<std::string> removedFiles;
 };
 
