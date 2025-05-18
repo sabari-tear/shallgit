@@ -23,3 +23,10 @@ std::unordered_map<std::string,std::string> stagingarea::getAddedFiles() {
 std::vector<std::string> stagingarea::getRemovedFiles() {
 	return removedFiles;
 }
+
+std::string stagingarea::serializeToString() {
+	std::ostringstream archive_stream;
+	boost::archive::text_oarchive archive(archive_stream);
+	archive << *this;
+	return archive_stream.str();
+}
