@@ -30,3 +30,9 @@ std::string stagingarea::serializeToString() {
 	archive << *this;
 	return archive_stream.str();
 }
+
+void stagingarea::deserilaizeFromString(const std::string& str) {
+	std::istringstream archive_stream(str);
+	boost::archive::text_iarchive archive(archive_stream);
+	archive >> *this;
+}

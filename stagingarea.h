@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <sstream>
 #include <boost/archive/text_oarchive.hpp>
-
+#include <boost/archive/text_iarchive.hpp>
 class stagingarea
 {
 public:
@@ -15,7 +15,7 @@ public:
 	std::unordered_map<std::string, std::string> getAddedFiles();
 	std::vector<std::string> getRemovedFiles();
 	std::string serializeToString();
-
+	void deserilaizeFromString(const std::string& str);
 
 	std::unordered_map<std::string, std::string> addedFiles;
 	std::vector<std::string> removedFiles;
