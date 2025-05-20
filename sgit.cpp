@@ -99,4 +99,11 @@ void sgit::commitment(const std::string& msg) {
     commit newCommit(msg, copiedBlobs, curr.getOwnHash());
     std::string commitPathString = (workingDir / ".shallgit/commits" / (newCommit.getOwnHash() + ".txt")).string();
 
+    std::ofstream ofs(commitPathString);
+    boost::archive::text_oarchive oa(ofs);
+    oa << newCommit;
+    ofs.close();
+
+    std::string branchPathString = (workingDir / ".shallgit/branches" / (head + ".txt")).string();
+
 }
