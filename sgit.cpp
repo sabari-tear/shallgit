@@ -105,5 +105,11 @@ void sgit::commitment(const std::string& msg) {
     ofs.close();
 
     std::string branchPathString = (workingDir / ".shallgit/branches" / (head + ".txt")).string();
+    std::ofstream branchFile(branchPathString);
 
+    branchFile << newCommit.getOwnHash();
+    branchFile.close();
+
+    stage.clear();
+    //serializeStage();
 }
