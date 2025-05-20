@@ -14,13 +14,14 @@ using namespace std::experimental::filesystem;
 
 #include "utils.h"
 #include "commit.h"
+#include "stagingarea.h"
 
 class sgit
 {
 public:
 	path workingDir;
 	string head;
-
+	stagingarea stage;
 	sgit();
 
 	void init();

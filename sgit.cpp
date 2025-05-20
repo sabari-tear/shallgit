@@ -53,7 +53,7 @@ void sgit::init() {
     headFile << " master";
     headFile.close();
 
-    //stage = StagingArea();
+    stage = stagingarea();
     //searilaizeStage();
 
     cout << "Intialized an empty shallgit repository in " << absolute(repo) << endl;
@@ -76,6 +76,14 @@ void sgit::add(const string& fileName) {
 
 void sgit::commitment(const std::string& msg) {
     //stage needed
+    if (stage.getAddedFiles().empty() && stage.getRemovedFiles().empty()) {
+        std::cout << "No changes added to the commit." << std::endl;
+        return;
+    }
+    else if (msg.empty()) {
+        std::cout << "Please enter commit msg." << std::endl;
+        return;
+    }
+    //Commit curr = getCurrentCommit();
 
-    Commit curr = getCurrentCommit();
 }

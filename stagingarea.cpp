@@ -36,3 +36,4 @@ void stagingarea::deserilaizeFromString(const std::string& str) {
 	boost::archive::text_iarchive archive(archive_stream);
 	archive >> *this;
 }
+
