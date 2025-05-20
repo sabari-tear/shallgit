@@ -84,6 +84,11 @@ void sgit::commitment(const std::string& msg) {
         std::cout << "Please enter commit msg." << std::endl;
         return;
     }
-    //Commit curr = getCurrentCommit();
+    commit curr;// = getCurrentCommit();
 
+    std::unordered_map<std::string, std::string> copiedBlobs = curr.getBlobs();
+
+    for (const auto& file : stage.getAddedFiles()) {
+        copiedBlobs[file.first] = file.second;
+    }
 }
