@@ -91,4 +91,12 @@ void sgit::commitment(const std::string& msg) {
     for (const auto& file : stage.getAddedFiles()) {
         copiedBlobs[file.first] = file.second;
     }
+
+    for (const auto& file : stage.getRemovedFiles()) {
+        copiedBlobs.erase(file);
+    }
+
+    commit newCommit(msg, copiedBlobs, curr.getOwnHash());
+    std::string commitPathString = (workingDir / ".shallgit/commits" / (newCommit.getOwnHash() + ".txt")).string();
+
 }
