@@ -27,5 +27,6 @@ public:
 	void init();
 	void add(const string& fileName);
 	void commitment(const string& msg);
+	void rm(const std::string& fileName);
 };
 
