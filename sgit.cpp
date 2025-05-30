@@ -113,3 +113,11 @@ void sgit::commitment(const std::string& msg) {
     stage.clear();
     //serializeStage();
 }
+
+
+void sgit::rm(const std::string& fileName) {
+    bool isSttaged = (stage.getAddedFiles().find(fileName)!=stage.getAddedFiles().end());
+
+    commit curr;// = getCurrentCommit();
+    bool isTracked = (curr.getBlobs().find(fileName) != curr.getBlobs().end());
+}
