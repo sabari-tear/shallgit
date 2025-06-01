@@ -116,8 +116,24 @@ void sgit::commitment(const std::string& msg) {
 
 
 void sgit::rm(const std::string& fileName) {
-    bool isSttaged = (stage.getAddedFiles().find(fileName)!=stage.getAddedFiles().end());
+    bool isStaged = (stage.getAddedFiles().find(fileName)!=stage.getAddedFiles().end());
 
     commit curr;// = getCurrentCommit();
     bool isTracked = (curr.getBlobs().find(fileName) != curr.getBlobs().end());
+
+    if (isTracked) {
+        remove(workingDir / fileName);
+        stage.addToRemovedFiles(fileName);
+        if (isStaged) {
+            stage.getAddedFiles().erase(fileName);
+        }   
+        //serializeStage();
+    }
+    else if (isStaged) {
+        stage.getAddedFiles().erase(fileName);
+        //serializeStage();
+    }
+    else {
+        std::cout << "No reason to remove the file" << std::endl;
+    }
 }
