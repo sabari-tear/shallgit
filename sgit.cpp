@@ -137,3 +137,7 @@ void sgit::rm(const std::string& fileName) {
         std::cout << "No reason to remove the file" << std::endl;
     }
 }
+
+void sgit::log() {
+
+}
