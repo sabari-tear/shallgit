@@ -139,5 +139,5 @@ void sgit::rm(const std::string& fileName) {
 }
 
 void sgit::log() {
-
+    commit curr; //getCurrentCommit();
 }
