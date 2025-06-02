@@ -140,4 +140,11 @@ void sgit::rm(const std::string& fileName) {
 
 void sgit::log() {
     commit curr; //getCurrentCommit();
+    while (!curr.getOwnHash().empty()) {
+        std::cout << curr.globalLog();
+        if (curr.getParentHash().empty()) {
+            break;
+        }
+        //curr = deserializeCommit(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt"));
+    }
 }
