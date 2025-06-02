@@ -31,7 +31,7 @@ void sgit::init() {
     string s = "initial commit";
     commit initialCommit(s , {}, string(""));
     string commitHash = initialCommit.getOwnHash();
-    //serializeCommit();
+    serializeCommit();
 
     path masterBranchPath = branches / "master.txt";
     ofstream masterFile(masterBranchPath.string());
