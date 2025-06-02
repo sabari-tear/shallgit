@@ -145,6 +145,6 @@ void sgit::log() {
         if (curr.getParentHash().empty()) {
             break;
         }
-        //curr = deserializeCommit(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt"));
+        curr = deserializeCommit(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt"));
     }
 }
