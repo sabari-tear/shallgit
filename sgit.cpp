@@ -148,3 +148,9 @@ void sgit::log() {
         curr = deserializeCommit(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt"));
     }
 }
+
+void sgit::serializeCommit(const commit& commit, const std::string& path) {
+    std::ofstream ofs(path);
+    boost::archive::text_oarchive oa(ofs);
+    oa << commit;
+}
