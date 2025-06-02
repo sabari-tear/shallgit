@@ -29,5 +29,9 @@ public:
 	void commitment(const string& msg);
 	void rm(const std::string& fileName);
 	void log();
+
+
+	void serializeCommit(const commit& commit, const std::string& path);
+		
 };
 
