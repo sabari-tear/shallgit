@@ -154,3 +154,13 @@ void sgit::serializeCommit(const commit& commit, const std::string& path) {
     boost::archive::text_oarchive oa(ofs);
     oa << commit;
 }
+
+commit sgit::deserializeCommit(const std::string& path) {
+    commit Commit;
+    std::ifstream ifs(path);
+    if (ifs.good()) {
+        boost::archive::text_iarchive ia(ifs);
+        ia >> Commit;
+    }
+    return Commit;
+}
