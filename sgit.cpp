@@ -164,3 +164,7 @@ commit sgit::deserializeCommit(const std::string& path) {
     }
     return Commit;
 }
+
+void sgit::global() {
+
+}
