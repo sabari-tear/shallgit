@@ -166,5 +166,9 @@ commit sgit::deserializeCommit(const std::string& path) {
 }
 
 void sgit::global() {
-
+    std::ifstream inFIle(workingDir / ".shallgit/global-log/gl.txt");
+    std::string line;
+    while (std::getline(inFIle, line)) {
+        std::cout << line << std::endl;
+    }
 }
