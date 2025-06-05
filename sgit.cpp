@@ -187,3 +187,7 @@ void sgit::find(const std::string& msg) {
         std::cout << "Found no commit" << std::endl;
     }
 }
+
+commit sgit::getCurrentCommit() {
+
+}
