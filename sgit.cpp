@@ -189,5 +189,8 @@ void sgit::find(const std::string& msg) {
 }
 
 commit sgit::getCurrentCommit() {
-
+    std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
+    std::string currentBranch = utils::readTextFromFile(headBranchPath);
+    std::string currentCommitHash = utils::readTextFromFile((workingDir / ".gitlet/branches" / (currentBranch + ".txt")).string());
+    return deserializeCommit((workingDir / ".shallgit/commits" / (currentCommitHash + ".txt")).string());
 }
