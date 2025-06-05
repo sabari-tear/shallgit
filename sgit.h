@@ -34,5 +34,6 @@ public:
 	void serializeCommit(const commit& commit, const std::string& path);
 	commit deserializeCommit(const std::string& path);
 	void global();
+	void find(const std::string& msg);
 };
 

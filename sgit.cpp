@@ -172,3 +172,14 @@ void sgit::global() {
         std::cout << line << std::endl;
     }
 }
+
+void sgit::find(const std::string& msg) {
+    bool found = false;
+    for (const auto& entry : directory_iterator(workingDir / ".gitlet/commits")) {
+        commit currCommit = deserializeCommit(entry.path().string());
+        if (currCommit.getMessage() == msg) {
+            std::cout << currCommit.getOwnHash() << std::endl;
+            found = true;
+        }
+    }
+}
