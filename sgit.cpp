@@ -182,4 +182,8 @@ void sgit::find(const std::string& msg) {
             found = true;
         }
     }
+
+    if (!found) {
+        std::cout << "Found no commit" << std::endl;
+    }
 }
