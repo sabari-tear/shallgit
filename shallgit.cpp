@@ -1,20 +1,32 @@
-// shallgit.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello World!\n";
+    vector<string> cmd;
+    for (int i = 1; i < argc; i++) {
+        cmd.push_back(argv[i]);
+	}
+
+    if (cmd.empty())
+        cout << "shallgit needs command" << '\n';
+    else
+    {
+        string op = cmd[0];
+
+        if (op == "init") {
+            cout << "git init hub moment" << '\n';
+        }
+        else if (op == "add") {
+            cout << "git add ah moment" << '\n';
+        }
+        else if (op == "commit") {
+            cout << "git committing" << '\n';
+        }
+        else if (op == "log") {
+            cout << "git log showing" << '\n';
+        }
+    }
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
