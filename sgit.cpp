@@ -196,3 +196,7 @@ commit sgit::getCurrentCommit() {
     //error
     return deserializeCommit((workingDir / ".shallgit/commits" / (currentCommitHash + ".txt")).string());
 }
+
+void sgit::checkout(const std::vector<std::string>& args) {
+
+}

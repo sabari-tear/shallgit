@@ -36,5 +36,6 @@ public:
 	void global();
 	void find(const std::string& msg);
 	commit getCurrentCommit();
+	void checkout(const std::vector<std::string>& args);
 };
 
