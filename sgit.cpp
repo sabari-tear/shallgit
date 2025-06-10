@@ -11,7 +11,7 @@ sgit::sgit() {
     workingDir = current_path();
     //desearilize functionality
 
-    head = readTextFromFile((workingDir/".shallgit/branches.head.txt").string())
+    head = readTextFromFile((workingDir / ".shallgit/branches.head.txt").string());
 }  
 
 void sgit::init() {  
@@ -198,5 +198,14 @@ commit sgit::getCurrentCommit() {
 }
 
 void sgit::checkout(const std::vector<std::string>& args) {
+    if (args.size() == 1) {
+        std::string branchName = args[0];
+        path  branchPath = workingDir / ".gitlet/branches" / (branchName + ".txt");
+        if (!exists(branchPath)) {
+            std::cout << "No such branch exists." << std::endl;
+            return;
+		}
+		std::string commitID = utils::readTextFromFile(branchPath.string());
 
+    }
 }

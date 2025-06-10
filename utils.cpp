@@ -5,7 +5,7 @@
 
 using namespace std;
 
-string utils::readTextFromFile(string& path) {
+string utils::readTextFromFile(const string& path) {
 	ifstream file(path);
 	return {istreambuf_iterator<char>(file), istreambuf_iterator<char>()};
 }
