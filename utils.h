@@ -10,8 +10,8 @@ namespace utils
 	string readTextFromFile(const string& file);
 	
 	string sha1(const vector<char>& vals);
-	string sha1(const string& str);
-	string sha1(const experimental::filesystem::path& path);
+	//string sha1(const string& str);
+	//string sha1(const experimental::filesystem::path& path);
 
 	bool restrictedDelete(const std::string& file);
 
