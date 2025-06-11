@@ -12,10 +12,19 @@ public:
 	void add(const std::string& filename, const std::string& sha1);
 	void addToRemovedFiles(const std::string& filename);
 	void clear();
+	
 	std::unordered_map<std::string, std::string> getAddedFiles();
 	std::vector<std::string> getRemovedFiles();
+	
 	std::string serializeToString();
 	void deserilaizeFromString(const std::string& str);
+
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version);
+
+	template<class Archive>
+	void deserialize(Archive& ar, const unsigned int version);
+
 
 	std::unordered_map<std::string, std::string> addedFiles;
 	std::vector<std::string> removedFiles;
