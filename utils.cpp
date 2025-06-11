@@ -56,3 +56,8 @@ experimental::filesystem::path utils::join(const string& file, const vector<stri
 	}
 	return re_path;
 }
+
+void utils::writeTextToFile(const string& file, const string& text, bool overwrite) {
+	ofstream ofs(text, overwrite ? ofstream::out : std::ofstream::app);
+	ofs << file;
+}
