@@ -1,16 +1,13 @@
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include "sgit.h"  
-#if __cplusplus >= 201703L  
-namespace fs = std::filesystem;  
-#else
-using namespace std::experimental::filesystem;  
-#endif  
+#include <filesystem>  
 using namespace utils;
 using namespace std;
+using namespace std::filesystem;
 
 sgit::sgit() {  
     workingDir = current_path();
-    //desearilize functionality
-
+    deserializeStage();
     head = readTextFromFile((workingDir / ".shallgit/branches.head.txt").string());
 }  
 
@@ -59,7 +56,7 @@ void sgit::init() {
     headFile.close();
 
     stage = stagingarea();
-    //searilaizeStage();
+    serializeStage();
 
     cout << "Intialized an empty shallgit repository in " << absolute(repo) << endl;
 
@@ -89,7 +86,7 @@ void sgit::commitment(const std::string& msg) {
         std::cout << "Please enter commit msg." << std::endl;
         return;
     }
-    commit curr;// = getCurrentCommit();
+    commit curr = getCurrentCommit();
 
     std::unordered_map<std::string, std::string> copiedBlobs = curr.getBlobs();
 
@@ -116,14 +113,13 @@ void sgit::commitment(const std::string& msg) {
     branchFile.close();
 
     stage.clear();
-    //serializeStage();
+    serializeStage();
 }
-
 
 void sgit::rm(const std::string& fileName) {
     bool isStaged = (stage.getAddedFiles().find(fileName)!=stage.getAddedFiles().end());
 
-    commit curr;// = getCurrentCommit();
+    commit curr = getCurrentCommit();
     bool isTracked = (curr.getBlobs().find(fileName) != curr.getBlobs().end());
 
     if (isTracked) {
@@ -132,11 +128,11 @@ void sgit::rm(const std::string& fileName) {
         if (isStaged) {
             stage.getAddedFiles().erase(fileName);
         }   
-        //serializeStage();
+        serializeStage();
     }
     else if (isStaged) {
         stage.getAddedFiles().erase(fileName);
-        //serializeStage();
+        serializeStage();
     }
     else {
         std::cout << "No reason to remove the file" << std::endl;
@@ -144,13 +140,13 @@ void sgit::rm(const std::string& fileName) {
 }
 
 void sgit::log() {
-    commit curr; //getCurrentCommit();
+    commit curr = getCurrentCommit();
     while (!curr.getOwnHash().empty()) {
         std::cout << curr.globalLog();
         if (curr.getParentHash().empty()) {
             break;
         }
-        curr = deserializeCommit(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt"));
+        curr = deserializeCommit((const string)(workingDir / ".shallgit/commits" / (curr.getOwnHash() + ".txt")).string());
     }
 }
 
@@ -187,7 +183,6 @@ void sgit::find(const std::string& msg) {
             found = true;
         }
     }
-
     if (!found) {
         std::cout << "Found no commit" << std::endl;
     }
@@ -196,21 +191,54 @@ void sgit::find(const std::string& msg) {
 commit sgit::getCurrentCommit() {
     std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
     std::string currentBranch = utils::readTextFromFile(headBranchPath);
-    //error
     std::string currentCommitHash = utils::readTextFromFile((workingDir / ".gitlet/branches" / (currentBranch + ".txt")).string());
-    //error
     return deserializeCommit((workingDir / ".shallgit/commits" / (currentCommitHash + ".txt")).string());
 }
 
 void sgit::checkout(const std::vector<std::string>& args) {
     if (args.size() == 1) {
         std::string branchName = args[0];
-        path  branchPath = workingDir / ".gitlet/branches" / (branchName + ".txt");
+        path  branchPath = workingDir / ".shallgit/branches" / (branchName + ".txt");
         if (!exists(branchPath)) {
             std::cout << "No such branch exists." << std::endl;
             return;
 		}
 		std::string commitID = utils::readTextFromFile(branchPath.string());
+        commit comit = deserializeCommit((workingDir / ".shallgit/commits" / (commitID + ".txt")).string());
+        for (const auto& fileName : comit.getBlobs()) {
+            checkoutFile(comit, fileName.first);
+        }
 
+        // remove files that are not in the commit to rest to
+        for (const auto& file : directory_iterator(workingDir)) {
+            if (is_regular_file(file) && file.path().filename() != ".shallgit" && file.path().filename() != "Shallgit") {
+                std::string relativePath = relative(file.path(), workingDir).string();
+                if (comit.getBlobs().find(relativePath) == comit.getBlobs().end()) {
+                    remove(file);
+                }
+            }
+        }
+
+        //overwrite
+        std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
+        utils::writeTextToFile(branchName, head, true);
+    }
+    else if (args.size() == 3 && args[1] == "--") {
+        std::string commitID = args[0];
+        string fileName = args[2];
+        commit comit = deserializeCommit((workingDir / ".shallgit/commits" / (commitID + ".txt")).string());
+        checkoutFile(comit, fileName);
+    }
+    else {
+        cout << "incorrect operands" << '\n';
     }
 }
+
+std::string sgit::getHEAD() {
+    return head;
+}
+
+stagingarea sgit::getStage() {
+    return stage;
+}
+

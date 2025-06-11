@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 using namespace std;
 
 string utils::readTextFromFile(const string& path) {

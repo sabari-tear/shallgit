@@ -18,5 +18,31 @@
     <ClCompile Include="shallgit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="commit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sgit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stagingarea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sgit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stagingarea.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include "stagingarea.h"
-
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 stagingarea::stagingarea() {
 
 }
@@ -38,13 +38,13 @@ void stagingarea::deserilaizeFromString(const std::string& str) {
 }
 
 template<class Archive>
-void serialize(Archive& ar, const unsigned int version) {
+void stagingarea::serialize(Archive& ar, const unsigned int version) {
 	ar& addedFiles;
 	ar& removedFiles;
 }
 
 template<class Archive>
-void deserialize(Archive& ar, const unsigned int version) {
+void stagingarea::deserialize(Archive& ar, const unsigned int version) {
 	ar& addedFiles;
 	ar& removedFiles;
 }

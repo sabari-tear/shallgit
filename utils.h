@@ -6,6 +6,7 @@
 #include <openssl/sha.h>
 #include <sstream>
 #include <iomanip>
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 using namespace std;
 

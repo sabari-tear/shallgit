@@ -1,4 +1,11 @@
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#define _CRT_SECURE_NO_WARNINGS
 #include "commit.h"
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <fstream>
+#include <sstream>
+#include <chrono>
 commit::commit() {
 
 }
@@ -53,13 +60,4 @@ std::string commit::calcHash() {
 	std::string serializedCommit = archive_stream.str();
 	std::vector<char> commitData(serializedCommit.begin(),serializedCommit.end());
 	return utils::sha1(commitData);
-}
-
-template<class Archive>
-void commit::serialize(Archive& ar, const unsigned int version) {
-	ar & message;
-	ar & blobs;
-	ar & parentHash;
-	ar & datetime;
-	ar & ownHash;
 }
