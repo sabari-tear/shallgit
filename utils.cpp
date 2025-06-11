@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include <experimental/filesystem>
 using namespace std;
 
 string utils::readTextFromFile(const string& path) {
@@ -10,7 +11,7 @@ string utils::readTextFromFile(const string& path) {
 	return {istreambuf_iterator<char>(file), istreambuf_iterator<char>()};
 }
 
-string utils::sha1(vector<char>& vals) {
+string utils::sha1(const vector<char>& vals) {
 	unsigned char hash[SHA_DIGEST_LENGTH];
 	SHA1(reinterpret_cast<const unsigned char*> (vals.data()), vals.size(), hash);
 
@@ -27,11 +28,11 @@ vector<char> utils::readBinaryFromFile(const string& path) {
 		throw runtime_error("Could not open file: " + path);
 	}
 
-	auto end = ifs.tellg();
-	ifs.seekg(0, ios::beg);
+	auto end = file.tellg();
+	file.seekg(0, ios::beg);
 
-	vector<char> bytes(end - ifs.tellg());
-	if (!ifs.read(bytes.data(), bytes.size())) {
+	vector<char> bytes(end - file.tellg());
+	if (!file.read(bytes.data(), bytes.size())) {
 		throw runtime_error("Could not read file: " + path);
 	}
 	return bytes;
@@ -46,4 +47,12 @@ void utils::writeBinaryToFile(const string& path, const vector<char>& bytes) {
 	if (!ofs) {
 		throw runtime_error("Could not write to file: " + path);
 	}
+}
+
+experimental::filesystem::path utils::join(const string& file, const vector<string>& others) {
+	experimental::filesystem::path re_path = file;
+	for (const auto& part : others) {
+		re_path /= part;
+	}
+	return re_path;
 }
