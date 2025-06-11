@@ -3,6 +3,10 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <openssl/sha.h>
+#include <sstream>
+#include <iomanip>
+#include <experimental/filesystem>
 using namespace std;
 
 namespace utils
@@ -10,10 +14,6 @@ namespace utils
 	string readTextFromFile(const string& file);
 	
 	string sha1(const vector<char>& vals);
-	//string sha1(const string& str);
-	//string sha1(const experimental::filesystem::path& path);
-
-	bool restrictedDelete(const std::string& file);
 
 	vector<char> readBinaryFromFile(const string& file);
 
