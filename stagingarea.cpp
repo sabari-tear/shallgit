@@ -42,6 +42,7 @@ void serialize(Archive& ar, const unsigned int version) {
 	ar& addedFiles;
 	ar& removedFiles;
 }
+
 template<class Archive>
 void deserialize(Archive& ar, const unsigned int version) {
 	ar& addedFiles;
