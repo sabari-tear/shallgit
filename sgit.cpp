@@ -190,8 +190,8 @@ void sgit::checkout(const std::vector<std::string>& args) {
         if (!exists(branchPath)) {
             std::cout << "No such branch exists." << std::endl;
             return;
-		}
-		std::string commitID = utils::readTextFromFile(branchPath.string());
+        }
+        std::string commitID = utils::readTextFromFile(branchPath.string());
         commit comit = deserializeCommit((workingDir / ".shallgit/commits" / (commitID + ".txt")).string());
         for (const auto& fileName : comit.getBlobs()) {
             checkoutFile(comit, fileName.first);
@@ -249,6 +249,21 @@ void sgit::branch(const std::string& branchName) {
         cout << "a branch with that name is already exists" << '\n';
         return;
     }
-    string sha1 = utils::readTextFromFile((workingDir / ".shallgit/branches" / head).string()+".txt");
+    string sha1 = utils::readTextFromFile((workingDir / ".shallgit/branches" / head).string() + ".txt");
     utils::writeTextToFile(sha1, branchPath.string(), false);
+}
+
+void sgit::rmb(const std::string& branchName) {
+    if (branchName == utils::readTextFromFile((workingDir / ".shallgit/branches/head.txt").string()))) {
+        std::cout << "Cannot remove the current branch." << "\n";
+        return;
+    }
+
+    path branchPath = workingDir / ".shallgit/branches" / (branchName + ".txt");
+    if (remove(branchPath)) {
+        cout << "branch:" << branchName << " removed" << '\n';
+    }
+    else {
+        cout << "a branch with that name does not exist.\n";
+    }
 }
