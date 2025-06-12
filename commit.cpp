@@ -54,3 +54,12 @@ std::string commit::calcHash() {
 	std::vector<char> commitData(serializedCommit.begin(),serializedCommit.end());
 	return utils::sha1(commitData);
 }
+
+template<class Archive>
+void commit::serialize(Archive& ar, const unsigned int version) {
+	ar & message;
+	ar & blobs;
+	ar & parentHash;
+	ar & datetime;
+	ar & ownHash;
+}

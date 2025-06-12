@@ -11,10 +11,17 @@ class commit
 {
 public:
 	std::string message;
-	std::unordered_map<std::string, std::string> blobs;
 	std::string parentHash;
 	std::string datetime;
 	std::string ownHash;
+	std::unordered_map<std::string, std::string> blobs;
+	std::string currentDateTime() const;
+
+	friend class boost::serialization::access;
+
+	template <class Archive>
+	void serialize(Archive& ar, const unsigned int version);
+
 
 	commit();
 	commit(const std::string& msg, const std::unordered_map<std::string, std::string>& blobMap, const std::string& parent);
