@@ -10,7 +10,7 @@ using namespace std::filesystem;
 #include "utils.h"
 #include "commit.h"
 #include "stagingarea.h"
-
+   
 class sgit
 {
 public:

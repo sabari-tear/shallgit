@@ -64,18 +64,6 @@ void sgit::init() {
     globalLogFile.close();
 }
 
-void sgit::add(const string& fileName) {
-    if (fileName == ".") {
-        for (const auto& file : directory_iterator(workingDir)) {
-            // check condition
-
-            add(file.path().filename().string());
-        }
-    }
-
-    //else condition
-}
-
 void sgit::commitment(const std::string& msg) {
     //stage needed
     if (stage.getAddedFiles().empty() && stage.getRemovedFiles().empty()) {
@@ -242,3 +230,25 @@ stagingarea sgit::getStage() {
     return stage;
 }
 
+void sgit::add(const string& fileName) {
+    if (fileName == ".") {
+        for (const auto& file : directory_iterator(workingDir)) {
+            // check condition
+
+            add(file.path().filename().string());
+        }
+    }
+
+    //else condition
+}
+
+
+void sgit::branch(const std::string& branchName) {
+    path branchPath = workingDir / ".shallgit/branches" / (branchName + ".txt");
+    if (exists(branchPath)) {
+        cout << "a branch with that name is already exists" << '\n';
+        return;
+    }
+    string sha1 = utils::readTextFromFile((workingDir / ".shallgit/branches" / head).string()+".txt");
+    utils::writeTextToFile(sha1, branchPath.string(), false);
+}
