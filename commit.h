@@ -15,7 +15,6 @@ public:
 	std::string datetime;
 	std::string ownHash;
 	std::unordered_map<std::string, std::string> blobs;
-	std::string currentDateTime() const;
 
 	friend class boost::serialization::access;
 
