@@ -22,6 +22,11 @@ void sgit::init() {
     path staging = repo / "staging";
     path globalLog = repo / "gloabal-log";
 
+    if (exists(repo)) {
+        cerr << "A shallgit repository already exists in " << absolute(repo) << endl;
+        return;
+	}
+
     create_directories(blobs);
     create_directories(commits);
     create_directories(branches);
@@ -31,7 +36,7 @@ void sgit::init() {
     string s = "initial commit";
     commit initialCommit(s , {}, string(""));
     string commitHash = initialCommit.getOwnHash();
-    serializeCommit();
+    serializeCommit(initialCommit, (commits/(commitHash + ".txt")).string());
 
     path masterBranchPath = branches / "master.txt";
     ofstream masterFile(masterBranchPath.string());
