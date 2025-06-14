@@ -32,7 +32,7 @@ public:
 	commit getCurrentCommit();
 	void checkout(const std::vector<std::string>& args);
 
-	string getHEAD();
+	string gethead();
 	stagingarea getStage();
 	void status();
 	void branch(const std::string& branchName);
@@ -40,14 +40,12 @@ public:
 	void reset(const std::string& commitID);
 	void merge(const std::string& bName);
 
-	commit findSplitPoint(const commit& currentCommit, const commit& branchCommit);
-	void checkoutFile(const commit& commit, const std::string& fileName);
+	commit findSplitPoint(commit& currentCommit, commit& branchCommit);
+	void checkoutFile(commit& comit, const std::string& fileName);
 	std::unordered_set<std::string> getAllAncestors(commit& comit);
 	void serializeStage();
 	void deserializeStage();
 	void handleConflict(const std::string& fileName, const std::string& currentBlobHash, const std::string& branchBlobHash);
 
-	path findfile(const std::string& fileName, const path& dir);
-	vector<char> addStuff(const std::vector<char>& addThisStuff, const std::vector<char>& newStuffs);
 };
 

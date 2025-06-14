@@ -8,7 +8,7 @@ using namespace std::filesystem;
 sgit::sgit() {  
     workingDir = current_path();
     deserializeStage();
-    head = readTextFromFile((workingDir / ".shallgit/branches.head.txt").string());
+    head = readTextFromFile((workingDir / ".shallgit/branches/head.txt").string());
 }  
 
 void sgit::init() {  
@@ -17,7 +17,7 @@ void sgit::init() {
     path commits = repo / "commits";
     path branches = repo / "branches";
     path staging = repo / "staging";
-    path globalLog = repo / "gloabal-log";
+    path globalLog = repo / "global-log";
 
     if (exists(repo)) {
         cerr << "A shallgit repository already exists in " << absolute(repo) << endl;
@@ -164,7 +164,7 @@ void sgit::global() {
 
 void sgit::find(const std::string& msg) {
     bool found = false;
-    for (const auto& entry : directory_iterator(workingDir / ".gitlet/commits")) {
+    for (const auto& entry : directory_iterator(workingDir / ".shallgit/commits")) {
         commit currCommit = deserializeCommit(entry.path().string());
         if (currCommit.getMessage() == msg) {
             std::cout << currCommit.getOwnHash() << std::endl;
@@ -179,7 +179,7 @@ void sgit::find(const std::string& msg) {
 commit sgit::getCurrentCommit() {
     std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
     std::string currentBranch = utils::readTextFromFile(headBranchPath);
-    std::string currentCommitHash = utils::readTextFromFile((workingDir / ".gitlet/branches" / (currentBranch + ".txt")).string());
+    std::string currentCommitHash = utils::readTextFromFile((workingDir / ".shallgit/branches" / (currentBranch + ".txt")).string());
     return deserializeCommit((workingDir / ".shallgit/commits" / (currentCommitHash + ".txt")).string());
 }
 
@@ -222,7 +222,7 @@ void sgit::checkout(const std::vector<std::string>& args) {
     }
 }
 
-std::string sgit::getHEAD() {
+std::string sgit::gethead() {
     return head;
 }
 
@@ -230,17 +230,17 @@ stagingarea sgit::getStage() {
     return stage;
 }
 
-void sgit::add(const string& fileName) {
-    if (fileName == ".") {
-        for (const auto& file : directory_iterator(workingDir)) {
-            // check condition
-
-            add(file.path().filename().string());
-        }
-    }
-
-    //else condition
-}
+//void sgit::add(const string& fileName) {
+//    if (fileName == ".") {
+//        for (const auto& file : directory_iterator(workingDir)) {
+//            // check condition
+//
+//            add(file.path().filename().string());
+//        }
+//    }
+//
+//    //else condition
+//}
 
 
 void sgit::branch(const std::string& branchName) {
@@ -295,4 +295,6 @@ void sgit::reset(const std::string& commitID) {
 
     cout << "reset to commit " << commitID << '\n';
 }
+
+//--------------------------------
 

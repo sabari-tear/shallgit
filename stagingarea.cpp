@@ -36,15 +36,3 @@ void stagingarea::deserilaizeFromString(const std::string& str) {
 	boost::archive::text_iarchive archive(archive_stream);
 	archive >> *this;
 }
-
-template<class Archive>
-void stagingarea::serialize(Archive& ar, const unsigned int version) {
-	ar& addedFiles;
-	ar& removedFiles;
-}
-
-template<class Archive>
-void stagingarea::deserialize(Archive& ar, const unsigned int version) {
-	ar& addedFiles;
-	ar& removedFiles;
-}

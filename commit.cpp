@@ -32,7 +32,7 @@ std::string commit::getDatetime() {
 	return datetime;
 }
 
-std::unordered_map<std::string, std::string> commit::getBlobs() {
+std::unordered_map<std::string, std::string> commit::getBlobs(){
 	return blobs;
 }
 
