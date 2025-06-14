@@ -254,7 +254,7 @@ void sgit::branch(const std::string& branchName) {
 }
 
 void sgit::rmb(const std::string& branchName) {
-    if (branchName == utils::readTextFromFile((workingDir / ".shallgit/branches/head.txt").string()))) {
+    if (branchName == utils::readTextFromFile((workingDir / ".shallgit/branches/head.txt").string())) {
         std::cout << "Cannot remove the current branch." << "\n";
         return;
     }
@@ -267,3 +267,32 @@ void sgit::rmb(const std::string& branchName) {
         cout << "a branch with that name does not exist.\n";
     }
 }
+
+void sgit::reset(const std::string& commitID) {
+    commit commitToreset = deserializeCommit(".shallgit/commit/" + commitID + ".txt");
+    if (commitToreset.getOwnHash().empty()) {
+        cout << "NO commit with that id." << '\n';
+        return;
+    }
+
+    for (const auto& [fileName, bloblHash] : commitToreset.getBlobs()) {
+        checkoutFile(commitToreset, fileName);
+    }
+
+    for (const auto& file : directory_iterator(workingDir)) {
+        if (is_regular_file(file) && file.path().filename() != ".shallgit" && file.path().filename() != "Shallgit") {
+            std::string relativePath = relative(file.path(), workingDir).string();
+            if (commitToreset.getBlobs().find(relativePath) == commitToreset.getBlobs().end()) {
+                remove(file);
+            }
+        }
+    }
+
+    string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
+    string currentBranch = utils::readTextFromFile(headBranchPath);
+    string branchPath = (workingDir / ".shallgit/branches" / currentBranch).string();
+    utils::writeTextToFile(commitID, branchPath, true);
+
+    cout << "reset to commit " << commitID << '\n';
+}
+
