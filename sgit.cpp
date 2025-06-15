@@ -296,5 +296,19 @@ void sgit::reset(const std::string& commitID) {
     cout << "reset to commit " << commitID << '\n';
 }
 
-//--------------------------------
+void sgit::handleConflict(const std::string& fileName, const std::string& currentBlobHash, const std::string& branchBlobHash) {
+    std::string conflictMarkerhead = "<<<<<<< head\n";
+    std::string conflictMarkerMid = "=======\n";
+    std::string conflictMarkerEnd = ">>>>>>>\n";
+    std::string currentContents = currentBlobHash.empty() ? std::string() :
+        std::string(utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (currentBlobHash + ".txt")).string()).begin(),
+            utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (currentBlobHash + ".txt")).string()).end());
+    std::string branchContents = branchBlobHash.empty() ? std::string() :
+        std::string(utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (branchBlobHash + ".txt")).string()).begin(),
+            utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (branchBlobHash + ".txt")).string()).end());
+    std::string conflictData = conflictMarkerhead + currentContents + conflictMarkerMid + branchContents + conflictMarkerEnd;
+    std::vector<char> conflictDataVec(conflictData.begin(), conflictData.end());
+    utils::writeBinaryToFile((workingDir / fileName).string(), conflictDataVec);
+    stage.add(fileName, utils::sha1(conflictDataVec));
+}
 
