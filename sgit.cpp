@@ -312,3 +312,8 @@ void sgit::handleConflict(const std::string& fileName, const std::string& curren
     stage.add(fileName, utils::sha1(conflictDataVec));
 }
 
+void sgit::checkoutFile(commit& comit, const std::string& fileName) {
+    std::string blobHash = comit.getBlobs().at(fileName);
+    std::vector<char> blobData = utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (blobHash + ".txt")).string());
+    utils::writeBinaryToFile((workingDir / fileName).string(), blobData);
+}
