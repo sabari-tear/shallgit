@@ -317,3 +317,18 @@ void sgit::checkoutFile(commit& comit, const std::string& fileName) {
     std::vector<char> blobData = utils::readBinaryFromFile((workingDir / ".shallgit/blobs" / (blobHash + ".txt")).string());
     utils::writeBinaryToFile((workingDir / fileName).string(), blobData);
 }
+
+commit sgit::findSplitPoint(commit& currentCommit, commit& branchCommit) {
+    std::unordered_set<std::string> currentAncestors = getAllAncestors(currentCommit);
+    std::unordered_set<std::string> branchAncestors = getAllAncestors(branchCommit);
+
+    for (const auto& ancestorHash : currentAncestors) {
+        if (branchAncestors.find(ancestorHash) != branchAncestors.end()) {
+            return deserializeCommit((workingDir / ".shallgit/commits" / (ancestorHash + ".txt")).string());
+        }
+    }
+
+    return commit(); // Return an empty commit if no common ancestor is found
+}
+
+
