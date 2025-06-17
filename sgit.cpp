@@ -327,8 +327,26 @@ commit sgit::findSplitPoint(commit& currentCommit, commit& branchCommit) {
             return deserializeCommit((workingDir / ".shallgit/commits" / (ancestorHash + ".txt")).string());
         }
     }
-
     return commit(); // Return an empty commit if no common ancestor is found
 }
 
+#include <queue>
+std::unordered_set<std::string> sgit::getAllAncestors(commit& comit) {
+    std::unordered_set<std::string> ancestors;
+    std::queue<std::string> toVisit;
+    toVisit.push(comit.getOwnHash());
+
+    while (!toVisit.empty()) {
+        std::string currentHash = toVisit.front();
+        toVisit.pop();
+        ancestors.insert(currentHash);
+
+        commit currentCommit = deserializeCommit((workingDir / ".shallgit/commits" / (currentHash + ".txt")).string());
+        if (!currentCommit.getParentHash().empty()) {
+            toVisit.push(currentCommit.getParentHash());
+        }
+    }
+
+    return ancestors;
+}
 
