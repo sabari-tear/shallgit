@@ -350,3 +350,20 @@ std::unordered_set<std::string> sgit::getAllAncestors(commit& comit) {
     return ancestors;
 }
 
+
+void sgit::serializeStage() {
+    std::ofstream ofs(".shallgit/staging/stage.txt");
+    boost::archive::text_oarchive oa(ofs);
+    oa << stage; // Assuming 'stage' is an instance of StagingArea
+}
+
+void sgit::deserializeStage() {
+    std::ifstream ifs(".shallgit/staging/stage.txt");
+    if (ifs.good()) { // Check if the file exists and is not empty
+        boost::archive::text_iarchive ia(ifs);
+        ia >> stage; // Assuming 'stage' is an instance of StagingArea
+    }
+}
+
+
+
