@@ -365,5 +365,145 @@ void sgit::deserializeStage() {
     }
 }
 
+void sgit::add(const std::string& fileName) {
+    if (fileName == ".") {
+        for (const auto& file : directory_iterator(workingDir)) {
+            if (is_regular_file(file) && file.path().extension() != ".shallgit" && file.path().filename() != "Shallgit") {
+                //slicing only the filename from the path
+                add(file.path().filename().string());
+            }
+        }
+    }
+    else {
+        if (!exists(workingDir / fileName)) {
+            std::cout << "File does not exist." << std::endl;
+            return;
+        }
+
+        std::vector<char> fileContents = utils::readBinaryFromFile((workingDir / fileName).string());
+        std::string sha1 = utils::sha1(fileContents);
+        std::string blobPath = (workingDir / ".shallgit/blobs" / (sha1 + ".txt")).string();
+        if (!exists(blobPath)) {
+            utils::writeBinaryToFile(blobPath, fileContents);
+        }
+
+        stage.add(fileName, sha1);
+        serializeStage();
+    }
+}
+
+void sgit::status() {
+    // List branches
+    std::vector<std::string> branches;
+    for (const auto& entry : directory_iterator(workingDir / ".shallgit/branches")) {
+        std::string branchName = entry.path().filename().string();
+        if (branchName != "head.txt") {
+            branches.push_back(branchName == head ? "*" + branchName : branchName);
+        }
+    }
+    std::sort(branches.begin(), branches.end());
+
+    // List staged files
+    std::vector<std::string> stagedFiles;
+    for (const auto& [fileName, _] : stage.getAddedFiles()) {
+        stagedFiles.push_back(fileName);
+    }
+    std::sort(stagedFiles.begin(), stagedFiles.end());
+
+    // List removed files
+    std::vector<std::string> removedFiles(stage.getRemovedFiles().begin(), stage.getRemovedFiles().end());
+    std::sort(removedFiles.begin(), removedFiles.end());
+
+    // Display status
+    std::cout << "=== Branches ===\n";
+    for (const auto& branchName : branches) {
+        //remove txt extension from branch name
+        //read current branch name from head.txt
+
+        std::string branch = branchName.substr(0, branchName.size() - 4);
+        std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
+        std::string currentBranch = utils::readTextFromFile(headBranchPath);
+
+        if (branch == currentBranch) {
+            std::cout << "*";
+        }
+
+        std::cout << branch << "\n";
+    }
+    std::cout << "\n=== Staged Files ===\n";
+    for (const auto& file : stagedFiles) {
+        std::cout << file << "\n";
+    }
+    std::cout << "\n=== Removed Files ===\n";
+    for (const auto& file : removedFiles) {
+        std::cout << file << "\n";
+    }
+
+    std::cout << "\n=== Modifications Not Staged For Commit ===\n\n=== Untracked Files ===\n";
+}
+
+
+void sgit::merge(const std::string& branchName) {
+    std::string currentBranch = utils::readTextFromFile((workingDir / ".shallgit/branches/head.txt").string());
+    if (currentBranch == branchName) {
+        std::cout << "Cannot merge a branch with itself." << std::endl;
+        return;
+    }
+
+    std::string currentCommitHash = utils::readTextFromFile((workingDir / ".shallgit/branches" / (currentBranch + ".txt")).string());
+    std::string branchCommitHash = utils::readTextFromFile((workingDir / ".shallgit/branches" / (branchName + ".txt")).string());
+    commit currentCommit = deserializeCommit((workingDir / ".shallgit/commits" / (currentCommitHash + ".txt")).string());
+    commit branchCommit = deserializeCommit((workingDir / ".shallgit/commits" / (branchCommitHash + ".txt")).string());
+
+    commit splitPoint = findSplitPoint(currentCommit, branchCommit);
+    if (splitPoint.getOwnHash().empty()) {
+        std::cout << "Already up-to-date." << std::endl;
+        return;
+    }
+    else if (splitPoint.getOwnHash() == branchCommit.getOwnHash()) {
+        utils::writeTextToFile(branchName, (workingDir / ".shallgit/branches/head.txt").string(), true);
+        std::cout << "Current branch fast-forwarded." << std::endl;
+        return;
+    }
+
+    std::unordered_set<std::string> currentAncestors = getAllAncestors(currentCommit);
+    std::unordered_set<std::string> branchAncestors = getAllAncestors(branchCommit);
+    std::unordered_set<std::string> splitPointAncestors = getAllAncestors(splitPoint);
+
+    // Check for uncommitted changes
+    if (!stage.getAddedFiles().empty() || !stage.getRemovedFiles().empty()) {
+        std::cout << "You have uncommitted changes." << std::endl;
+        return;
+    }
+
+    // Check for untracked files
+    for (const auto& file : directory_iterator(workingDir)) {
+        if (is_regular_file(file) && file.path().filename() != ".shallgit" && file.path().filename() != "Shallgit") {
+            std::string relativePath = relative(file.path(), workingDir).string();
+            if (currentCommit.getBlobs().find(relativePath) == currentCommit.getBlobs().end() && branchCommit.getBlobs().find(relativePath) == branchCommit.getBlobs().end()) {
+                std::cout << "There is an untracked file in the way; delete it, or add and commit it first." << std::endl;
+                return;
+            }
+        }
+    }
+
+    // Check for conflicts
+    for (const auto& [fileName, currentBlobHash] : currentCommit.getBlobs()) {
+        std::string branchBlobHash = branchCommit.getBlobs().find(fileName) != branchCommit.getBlobs().end() ? branchCommit.getBlobs().at(fileName) : "";
+        std::string splitPointBlobHash = splitPoint.getBlobs().find(fileName) != splitPoint.getBlobs().end() ? splitPoint.getBlobs().at(fileName) : "";
+        if (currentBlobHash != branchBlobHash && currentBlobHash != splitPointBlobHash && branchBlobHash != splitPointBlobHash) {
+            std::cout << "Encountered a merge conflict." << std::endl;
+            handleConflict(fileName, currentBlobHash, branchBlobHash);
+            return;
+        }
+    }
+
+    // Update the current branch's commit ID
+    std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
+    utils::writeTextToFile(currentBranch, headBranchPath, true);
+    std::cout << "Merged " << branchName << " into " << currentBranch << "." << std::endl;
+}
+
+
 
 
