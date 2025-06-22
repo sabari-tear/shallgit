@@ -1,5 +1,4 @@
 #include "utils.h"
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 using namespace std;
 
 string utils::readTextFromFile(const string& path) {
@@ -8,12 +7,21 @@ string utils::readTextFromFile(const string& path) {
 }
 
 string utils::sha1(const vector<char>& vals) {
+	// to store the 20-byte (160-bit) SHA-1 hash output
 	unsigned char hash[SHA_DIGEST_LENGTH];
+
+	// Compute the SHA-1 hash of the entire input data (vals)
 	SHA1(reinterpret_cast<const unsigned char*> (vals.data()), vals.size(), hash);
 
+	// Create a stringstream to build the final hexadecimal hash string
+
 	std::stringstream ss;
+	// Convert each byte of the hash into a two-digit hexadecimal representation
 	for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-		ss << hex << setw(2) << setfill('0') << static_cast<int>(hash[i]);
+		ss << std::hex               // Set stream to hexadecimal format
+			<< std::setw(2)           // Each byte is represented with 2 digits
+			<< std::setfill('0')      // Pad with 0 if less than 2 digits (e.g., '0a')
+			<< static_cast<int>(hash[i]); // Convert unsigned char to int for output
 	}
 	return ss.str();
 }

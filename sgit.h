@@ -42,7 +42,7 @@ public:
 
 	commit findSplitPoint(commit& currentCommit, commit& branchCommit);
 	void checkoutFile(commit& comit, const std::string& fileName);
-	std::unordered_set<std::string> getAllAncestors(commit& comit);
+	std::unordered_map<std::string, int> getAllAncestors(commit& comit);
 	void serializeStage();
 	void deserializeStage();
 	void handleConflict(const std::string& fileName, const std::string& currentBlobHash, const std::string& branchBlobHash);
