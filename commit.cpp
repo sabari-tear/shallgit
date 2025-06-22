@@ -49,9 +49,12 @@ std::string commit::currentDateTime() {
 	//converting the time point into c-standard time_t format
 	auto in_time_t = std::chrono::system_clock::to_time_t(now);
 	
+	std::tm tm_buf;
+	localtime_s(&tm_buf, &in_time_t);  // safe, thread-safe version
+
 	//format the time_t to 2025-06-18 13:43:02
 	std::stringstream ss;
-	ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+	ss << std::put_time(&tm_buf, "%Y-%m-%d %X");
 	return ss.str();
 }
 
