@@ -110,6 +110,3 @@ shallgit status
 - This project is for educational purposes and is not a replacement for Git.
 
 ---
-
-## License
-MIT License (or specify your own) 
