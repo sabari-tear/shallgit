@@ -8,21 +8,20 @@
 #include <iomanip>
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
-using namespace std;
 
 namespace utils
 {
-	string readTextFromFile(const string& file);
+	std::string readTextFromFile(const std::string& file);
 	
-	string sha1(const vector<char>& vals);
+	std::string sha1(const std::vector<char>& vals);
 
-	vector<char> readBinaryFromFile(const string& file);
+	std::vector<char> readBinaryFromFile(const std::string& file);
 
-	void writeBinaryToFile(const string& file, const vector<char>& data);
+	void writeBinaryToFile(const std::string& file, const std::vector<char>& data);
 
-	experimental::filesystem::path join(const string& file, const vector<string>& others);
+	experimental::filesystem::path join(const std::string& file, const std::vector<std::string>& others);
 
-	void writeTextToFile(const string& file, const string& text,bool overwrite);
+	void writeTextToFile(const std::string& file, const std::string& text,bool overwrite);
 	
 };
 

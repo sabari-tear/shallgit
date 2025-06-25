@@ -106,10 +106,16 @@ void sgit::commitment(const std::string& msg) {
     std::string commitPathString = (workingDir / ".shallgit/commits" / (newCommit.getOwnHash() + ".txt")).string();
 
     //serialize the commit object to the file
-    std::ofstream ofs(commitPathString);
-    boost::archive::text_oarchive oa(ofs);
-    oa << newCommit;
-    ofs.close();
+    try {
+        std::ofstream ofs(commitPathString);
+        if (!ofs) throw std::runtime_error("Could not open commit file for writing");
+        boost::archive::text_oarchive oa(ofs);
+        oa << newCommit;
+        ofs.close();
+    } catch (const std::exception& e) {
+        std::cerr << "Error serializing commit: " << e.what() << std::endl;
+        return;
+    }
     
     //global log update
     std::ofstream globalLogFile(workingDir / ".shallgit/global-log/gl.txt", std::ios::app);
@@ -139,16 +145,20 @@ void sgit::rm(const std::string& fileName) {
 
     if (isTracked) {
         // if blob is already there then delete the file
-        remove(workingDir / fileName);
+        try {
+            remove(workingDir / fileName);
+        } catch (const std::exception& e) {
+            std::cerr << "Error removing file: " << e.what() << std::endl;
+        }
         stage.addToRemovedFiles(fileName);
         if (isStaged) {
-            stage.getAddedFiles().erase(fileName);
+            stage.removeFromAddedFiles(fileName);
         }
         serializeStage();
     }
     else if (isStaged) {
         //just remove the file from staged
-        stage.getAddedFiles().erase(fileName);
+        stage.removeFromAddedFiles(fileName);
         serializeStage();
     }
     else {
@@ -181,9 +191,12 @@ commit sgit::deserializeCommit(const std::string& path) {
     //setting input stream for load to commit var
     std::ifstream ifs(path);
     if (ifs.good()) {
-        //read the commit from the file and desrialize it and push it to the var
-        boost::archive::text_iarchive ia(ifs);
-        ia >> Commit;
+        try {
+            boost::archive::text_iarchive ia(ifs);
+            ia >> Commit;
+        } catch (const std::exception& e) {
+            std::cerr << "Error deserializing commit: " << e.what() << std::endl;
+        }
     }
     return Commit;
 }
@@ -240,14 +253,18 @@ void sgit::checkout(const std::vector<std::string>& args) {
             if (is_regular_file(file)) {
                 std::string relativePath = relative(file.path(), workingDir).string();
                 if (comit.getBlobs().find(relativePath) == comit.getBlobs().end()) {
-                    remove(file);
+                    try {
+                        remove(file);
+                    } catch (const std::exception& e) {
+                        std::cerr << "Error removing file during checkout: " << e.what() << std::endl;
+                    }
                 }
             }
         }
 
         //overwrite the head.txt to current branch
         std::string headBranchPath = (workingDir / ".shallgit/branches/head.txt").string();
-        utils::writeTextToFile(branchName, head, true);
+        utils::writeTextToFile(headBranchPath, branchName, true);
     }
     else if (args.size() == 3 && args[1] == "--") {
         std::string commitID = args[0];
@@ -393,7 +410,7 @@ commit sgit::findSplitPoint(commit& currentCommit, commit& branchCommit) {
     }
 
     if (!splitPointHash.empty()) {
-        return deserializeCommit((workingDir / ".gitlet/commits" / (splitPointHash + ".txt")).string());
+        return deserializeCommit((workingDir / ".shallgit/commits" / (splitPointHash + ".txt")).string());
     }
     return commit(); // Return empty commit if no common ancestorr is found
 }
@@ -423,11 +440,15 @@ std::unordered_map<std::string, int> sgit::getAllAncestors(commit& comit) {
 
 void sgit::serializeStage() {
     //output stream path where it saves
-    std::ofstream ofs(".shallgit/staging/stage.txt");
-    //load to deserialize and output on the desired path
-    boost::archive::text_oarchive oa(ofs);
-    // push the stage to archive it desiralize it and save it in disk
-    oa << stage; 
+    try {
+        std::ofstream ofs(".shallgit/staging/stage.txt");
+        if (!ofs) throw std::runtime_error("Could not open stage file for writing");
+        boost::archive::text_oarchive oa(ofs);
+        // push the stage to archive it desiralize it and save it in disk
+        oa << stage; 
+    } catch (const std::exception& e) {
+        std::cerr << "Error serializing stage: " << e.what() << std::endl;
+    }
 }
 
 void sgit::deserializeStage() {
@@ -435,11 +456,12 @@ void sgit::deserializeStage() {
     std::ifstream ifs(".shallgit/staging/stage.txt");
     //checking if theres is any file in the staging area
     if (ifs.good()) {
-        // set the input archive to dearialize
-        boost::archive::text_iarchive ia(ifs);
-        // insert the desrialized stage object to stage var;
-        ia >> stage;
-        //adding the staged files to the stage var
+        try {
+            boost::archive::text_iarchive ia(ifs);
+            ia >> stage;
+        } catch (const std::exception& e) {
+            std::cerr << "Error deserializing stage: " << e.what() << std::endl;
+        }
     }
 }
 
@@ -459,20 +481,24 @@ void sgit::add(const std::string& fileName) {
         }
 
         //convert the file into binary
-        std::vector<char> fileContents = utils::readBinaryFromFile((workingDir / fileName).string());
-        //getting hash of the binary to set name for the file
-        std::string sha1 = utils::sha1(fileContents);
-        //creating txt file named the hash of the binary
-        std::string blobPath = (workingDir / ".shallgit/blobs" / (sha1 + ".txt")).string();
-        if (!exists(blobPath)) {
-            //write the binary to hash named file
-            utils::writeBinaryToFile(blobPath, fileContents);
-        }
+        try {
+            std::vector<char> fileContents = utils::readBinaryFromFile((workingDir / fileName).string());
+            //getting hash of the binary to set name for the file
+            std::string sha1 = utils::sha1(fileContents);
+            //creating txt file named the hash of the binary
+            std::string blobPath = (workingDir / ".shallgit/blobs" / (sha1 + ".txt")).string();
+            if (!exists(blobPath)) {
+                //write the binary to hash named file
+                utils::writeBinaryToFile(blobPath, fileContents);
+            }
 
-        //add the file name to the stage
-        stage.add(fileName, sha1);
-        //serialize the stage to disk
-        serializeStage();
+            //add the file name to the stage
+            stage.add(fileName, sha1);
+            //serialize the stage to disk
+            serializeStage();
+        } catch (const std::exception& e) {
+            std::cerr << "Error adding file: " << e.what() << std::endl;
+        }
     }
 }
 

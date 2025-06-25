@@ -22,7 +22,9 @@ public:
 
 
 	std::string serializeToString();
-	void deserilaizeFromString(const std::string& str);
+	void deserializeFromString(const std::string& str);
+	void removeFromAddedFiles(const std::string& filename);
+	void removeFromRemovedFiles(const std::string& filename);
 	
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version) {

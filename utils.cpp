@@ -61,7 +61,19 @@ experimental::filesystem::path utils::join(const string& file, const vector<stri
 	return re_path;
 }
 
-void utils::writeTextToFile(const string& file, const string& text, bool overwrite) {
-	ofstream ofs(text, overwrite ? ofstream::out : std::ofstream::app);
-	ofs << file;
+void utils::writeTextToFile(const std::string& file, const std::string& text, bool overwrite) {
+	std::ofstream ofs;
+	if (overwrite) {
+		ofs.open(file, std::ofstream::out | std::ofstream::trunc);
+	} else {
+		ofs.open(file, std::ofstream::out | std::ofstream::app);
+	}
+	if (!ofs) {
+		throw std::runtime_error("Could not open file for writing: " + file);
+	}
+	ofs << text;
+	if (!ofs) {
+		throw std::runtime_error("Could not write to file: " + file);
+	}
+	ofs.close();
 }

@@ -108,5 +108,3 @@ shallgit status
 - All repository data is stored in a hidden `.shallgit` directory.
 - Only basic error handling is implemented; use with caution for important data.
 - This project is for educational purposes and is not a replacement for Git.
-
----
