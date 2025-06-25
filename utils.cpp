@@ -53,8 +53,8 @@ void utils::writeBinaryToFile(const string& path, const vector<char>& bytes) {
 	}
 }
 
-experimental::filesystem::path utils::join(const string& file, const vector<string>& others) {
-	experimental::filesystem::path re_path = file;
+std::filesystem::path utils::join(const string& file, const vector<string>& others) {
+	std::filesystem::path re_path = file;
 	for (const auto& part : others) {
 		re_path /= part;
 	}

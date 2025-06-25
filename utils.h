@@ -6,8 +6,7 @@
 #include <openssl/sha.h>
 #include <sstream>
 #include <iomanip>
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-#include <experimental/filesystem>
+#include <filesystem>
 
 namespace utils
 {
@@ -19,7 +18,7 @@ namespace utils
 
 	void writeBinaryToFile(const std::string& file, const std::vector<char>& data);
 
-	experimental::filesystem::path join(const std::string& file, const std::vector<std::string>& others);
+	std::filesystem::path join(const std::string& file, const std::vector<std::string>& others);
 
 	void writeTextToFile(const std::string& file, const std::string& text,bool overwrite);
 	

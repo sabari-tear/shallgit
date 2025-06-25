@@ -10,12 +10,14 @@ using namespace std::filesystem;
 #include "utils.h"
 #include "commit.h"
 #include "stagingarea.h"
-   
+
+using namespace std;
+
 class sgit
 {
 public:
 	path workingDir;
-	string head;
+	std::string head;
 	stagingarea stage;
 	sgit();
 

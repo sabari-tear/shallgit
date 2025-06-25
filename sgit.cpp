@@ -327,7 +327,7 @@ void sgit::rmb(const std::string& branchName) {
 
 void sgit::reset(const std::string& commitID) {
     // get the commit object
-    commit commitToreset = deserializeCommit(".shallgit/commit/" + commitID + ".txt");
+    commit commitToreset = deserializeCommit(".shallgit/commits/" + commitID + ".txt");
     if (commitToreset.getOwnHash().empty()) {
         cout << "NO commit with that id." << '\n';
         return;
